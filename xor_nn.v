@@ -1,4 +1,4 @@
-module xorNN(	input clk,
+module xor_nn(	input clk,
 		output reg rdy
 );
 
