@@ -2,10 +2,15 @@ import numpy as np
 
 class Xor:
 
+	def __init__(self):
+		self.w1 = [[0, -1], [1 , 1], [1, 1]]
+		self.w2 = [[0], [1], [-2]]
+
+
 	def predict(self, X):
-		h1 = self.append_bias(X) @ [[0, -1], [1 , 1], [1, 1]]
+		h1 = self.append_bias(X) @ self.w1
 		a1 = self.relu(h1)
-		o1 = self.append_bias(a1) @ [[0], [1], [-2]]
+		o1 = self.append_bias(a1) @ self.w2
 
 		return o1
 
