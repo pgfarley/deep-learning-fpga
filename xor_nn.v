@@ -1,6 +1,6 @@
 //TODO  bus protocol
 //TODO  Allow weights to be passed in
-//TODO  reset_m support
+//TODO  reset_n support
 //TODO non-integer weights
 //TODO dynamic number of hidden layers?
 module xor_nn #(parameter
@@ -55,9 +55,11 @@ begin
 			for(k = 0; k < CLOG2_INPUT_VECTOR_SIZE + 1; k=k+1) begin
 				h1[i][j+1] = h1[i][j+1] + (x[i][k] * w1[k][j]);
 			end
- 			h1[i][i+1] = relu(h1[i][i+1]);
+ 			h1[i][j+1] = relu(h1[i][j+1]);
 		end
+	h1[i] = {h1[i][j-1:0],1'b1};
 	end
+
 	
 	for(i = 0; i < CLOG2_OUTPUT_VECTOR_SIZE; i=i+1) begin
 		prediction_data[i] = 0;
@@ -67,6 +69,8 @@ begin
 			end
 		end
 	end
+
+	prediction_data <= prediction_data;
 	
 
 end
