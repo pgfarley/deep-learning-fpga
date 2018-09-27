@@ -8,9 +8,9 @@
 //TODO dynamic number of hidden layers?
 module xor_nn(	input clk,
 		input reset_n,
-		input[1:0] input_data,
+		input[0:1] input_data,
 
-		output reg prediction_data
+		output reg[0:0] prediction_data
 );
 
 wire[2:0] x = {input_data, 1'b1};
