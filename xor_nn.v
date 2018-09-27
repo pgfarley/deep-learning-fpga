@@ -2,7 +2,6 @@
 //TODO  Allow weights to be passed in
 //TODO  reset_m support
 //TODO non-integer weights
-//TODO dynamic layer sizes
 //TODO dynamic number of hidden layers?
 module xor_nn #(parameter
 	BITS_PER_WORD = 8,
@@ -20,7 +19,7 @@ module xor_nn #(parameter
 
 wire[0:0] x [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_INPUT_VECTOR_SIZE:0];
 reg signed [BITS_PER_WORD-1:0]  w1 [CLOG2_INPUT_VECTOR_SIZE:0][CLOG2_HIDDEN_LAYER_SIZE-1:0];
-reg [BITS_PER_WORD-1:0] a1 [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_HIDDEN_LAYER_SIZE:0];
+reg [BITS_PER_WORD-1:0] h1 [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_HIDDEN_LAYER_SIZE:0];
 reg signed [BITS_PER_WORD-1:0] w2 [CLOG2_HIDDEN_LAYER_SIZE:0][CLOG2_OUTPUT_VECTOR_SIZE-1:0];
 
 function relu;
@@ -34,25 +33,8 @@ assign x[0][0] = 1;
 assign x[0][1] = input_data[0];
 assign x[0][2] = input_data[1];
 
-integer i=0;
-integer j=0;
+integer i, j, k;
 always @( posedge clk)
-begin
-	a1[0][0] = 1;
-	a1[0][1] = 0;
-	a1[0][2] = 0;
-	
-	for(i = 0; i < CLOG2_HIDDEN_LAYER_SIZE; i=i+1) begin
-		for(j = 0; j < CLOG2_INPUT_VECTOR_SIZE + 1; j=j+1) begin
-			a1[0][i+1] = a1[0][i+1] + (x[0][j] * w1[j][i]);
-		end
- 		a1[0][i+1] = relu(a1[0][i+1]);
-	end
-
-end
-
-
-always @ (posedge clk)
 begin
 	w1[0][0] <= 0;
 	w1[0][1] <= -1;
@@ -66,8 +48,26 @@ begin
 	w2[2][0] <= -2;
 
 
-	prediction_data <= a1[0][0] * w2[0][0] + a1[0][1] * w2[1][0] + a1[0][2] * w2[2][0];
-
+	for(i = 0; i < CLOG2_INPUT_VECTOR_COUNT; i=i+1) begin
+	h1[i][0] = 1;
+		for(j = 0; j < CLOG2_HIDDEN_LAYER_SIZE; j=j+1) begin
+			h1[i][j+1] = 0;
+			for(k = 0; k < CLOG2_INPUT_VECTOR_SIZE + 1; k=k+1) begin
+				h1[i][j+1] = h1[i][j+1] + (x[i][k] * w1[k][j]);
+			end
+ 			h1[i][i+1] = relu(h1[i][i+1]);
+		end
+	end
+	
+	for(i = 0; i < CLOG2_OUTPUT_VECTOR_SIZE; i=i+1) begin
+		prediction_data[i] = 0;
+		for(j = 0; j < CLOG2_HIDDEN_LAYER_SIZE + 1; j=j+1) begin
+			for(k = 0; k < CLOG2_INPUT_VECTOR_COUNT; k=k+1) begin
+				prediction_data[i] = prediction_data[i] + (h1[k][j] * w2[j][i]);
+			end
+		end
+	end
+	
 
 end
 
