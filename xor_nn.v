@@ -20,7 +20,7 @@ module xor_nn #(parameter
 
 wire[0:0] x [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_INPUT_VECTOR_SIZE:0];
 reg signed [BITS_PER_WORD-1:0]  w1 [CLOG2_INPUT_VECTOR_SIZE:0][CLOG2_HIDDEN_LAYER_SIZE-1:0];
-wire [BITS_PER_WORD-1:0] a1 [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_HIDDEN_LAYER_SIZE:0];
+reg [BITS_PER_WORD-1:0] a1 [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_HIDDEN_LAYER_SIZE:0];
 reg signed [BITS_PER_WORD-1:0] w2 [CLOG2_HIDDEN_LAYER_SIZE:0][CLOG2_OUTPUT_VECTOR_SIZE-1:0];
 
 function relu;
@@ -34,9 +34,23 @@ assign x[0][0] = 1;
 assign x[0][1] = input_data[0];
 assign x[0][2] = input_data[1];
 
-assign a1[0][0] = 1;
-assign a1[0][1] = relu(x[0][0] * w1[0][0] + x[0][1] * w1[1][0] + x[0][2] * w1[2][0]);
-assign a1[0][2] = relu(x[0][1] * w1[0][1] + x[0][1] * w1[1][1] + x[0][2] * w1[2][1]);
+integer i=0;
+integer j=0;
+always @(*)
+begin
+	a1[0][0] = 1;
+	a1[0][1] = 0;
+	a1[0][2] = 0;
+	
+	for(i = 0; i < CLOG2_HIDDEN_LAYER_SIZE; i=i+1) begin
+		for(j = 0; j < CLOG2_INPUT_VECTOR_SIZE + 1; j=j+1) begin
+			a1[0][i+1] = a1[0][i+1] + (x[0][j] * w1[j][i]);
+		end
+ 		a1[0][i+1] = relu(a1[0][i+1]);
+	end
+
+end
+
 
 always @ (posedge clk)
 begin
