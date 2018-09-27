@@ -36,7 +36,7 @@ assign x[0][2] = input_data[1];
 
 integer i=0;
 integer j=0;
-always @(*)
+always @( posedge clk)
 begin
 	a1[0][0] = 1;
 	a1[0][1] = 0;
