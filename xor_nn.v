@@ -5,6 +5,7 @@
 //TODO dynamic layer sizes
 //TODO dynamic number of hidden layers?
 module xor_nn #(parameter
+	BITS_PER_WORD = 8,
 	CLOG2_INPUT_VECTOR_SIZE = 2,
 	CLOG2_INPUT_VECTOR_COUNT = 1,
 	CLOG2_HIDDEN_LAYER_SIZE = 2,
@@ -18,12 +19,12 @@ module xor_nn #(parameter
 );
 
 wire[0:0] x [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_INPUT_VECTOR_SIZE:0];
-reg signed [7:0]  w1 [CLOG2_INPUT_VECTOR_SIZE:0][CLOG2_HIDDEN_LAYER_SIZE-1:0];
-wire [7:0] a1 [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_HIDDEN_LAYER_SIZE:0];
-reg signed [7:0] w2 [CLOG2_HIDDEN_LAYER_SIZE:0][CLOG2_OUTPUT_VECTOR_SIZE-1:0];
+reg signed [BITS_PER_WORD-1:0]  w1 [CLOG2_INPUT_VECTOR_SIZE:0][CLOG2_HIDDEN_LAYER_SIZE-1:0];
+wire [BITS_PER_WORD-1:0] a1 [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_HIDDEN_LAYER_SIZE:0];
+reg signed [BITS_PER_WORD-1:0] w2 [CLOG2_HIDDEN_LAYER_SIZE:0][CLOG2_OUTPUT_VECTOR_SIZE-1:0];
 
 function relu;
-	input signed [7:0] value;
+	input signed [BITS_PER_WORD-1:0] value;
 	begin
 		relu = value & ~value[7];
 	end
