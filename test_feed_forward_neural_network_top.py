@@ -10,6 +10,14 @@ def should_equal(expected, actual):
 		raise TestFailure(f'Expected {expected} found {actual}')
 
 @cocotb.coroutine
+def reset(dut):
+	dut.reset_n = 0
+	yield RisingEdge(dut.clk)
+	dut.reset_n = 1
+	dut.in_en = 0
+	yield RisingEdge(dut.clk)
+
+@cocotb.coroutine
 def load_xor_weights(dut):
 	w0 = [
 		[0, -1],
@@ -41,10 +49,12 @@ def load_xor_weights(dut):
 def test_xor_00(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
-	
+
+	yield reset(dut)	
 	yield load_xor_weights(dut)	
 
 	dut.in_data = 0b00
+	dut.in_en = 1
 	
 	for _ in range(0,10):
 		yield RisingEdge(dut.clk)
@@ -57,12 +67,13 @@ def test_xor_01(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
 	
+	yield reset(dut)	
 	yield load_xor_weights(dut)	
 
 	dut.in_data = 0b01
+	dut.in_en = 1
 
-	for _ in range(0,10):
-		yield RisingEdge(dut.clk)
+	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
 	should_equal('1', dut.out_data.value.binstr)
@@ -72,9 +83,11 @@ def test_xor_10(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
 
+	yield reset(dut)	
 	yield load_xor_weights(dut)	
 
 	dut.in_data = 0b10
+	dut.in_en = 1
 
 	for _ in range(0,10):
 		yield RisingEdge(dut.clk)
@@ -86,10 +99,12 @@ def test_xor_10(dut):
 def test_xor_11(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
-
+	
+	yield reset(dut)
 	yield load_xor_weights(dut)	
 
 	dut.in_data = 0b11
+	dut.in_en = 1
 
 	for _ in range(0,10):
 		yield RisingEdge(dut.clk)
