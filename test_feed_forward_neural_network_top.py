@@ -43,7 +43,7 @@ def load_weights(dut, weights):
 			dut.weights_n_address = n_idx
 			for m_idx, m in enumerate(n):
 				dut.weights_m_address = m_idx
-				dut.weights_data = int(m * math.pow(2,4))
+				dut.weights_data = int(m * math.pow(2,8))
 				yield RisingEdge(dut.clk)
 	dut.weights_en = 0
 	yield RisingEdge(dut.clk)
@@ -62,7 +62,7 @@ def test_xor_00(dut):
 	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
-	should_equal('0', dut.out_data.value.binstr)
+	should_equal(0, dut.out_data.value.signed_integer / math.pow(2,8))
 
 @cocotb.test()
 def test_xor_01(dut):
@@ -78,7 +78,7 @@ def test_xor_01(dut):
 	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
-	should_equal('1', dut.out_data.value.binstr)
+	should_equal(1, dut.out_data.value.signed_integer / math.pow(2,8))
 
 @cocotb.test()
 def test_xor_10(dut):
@@ -94,7 +94,7 @@ def test_xor_10(dut):
 	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
-	should_equal('1', dut.out_data.value.binstr)
+	should_equal(1, dut.out_data.value.signed_integer / math.pow(2,8))
 
 @cocotb.test()
 def test_xor_11(dut):
@@ -110,7 +110,7 @@ def test_xor_11(dut):
 	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
-	should_equal('0', dut.out_data.value.binstr)
+	should_equal(0, dut.out_data.value.signed_integer / math.pow(2,8))
 
 @cocotb.test()
 def test_xor_non_integral_11(dut):
@@ -121,14 +121,14 @@ def test_xor_non_integral_11(dut):
 
 	weights = [ 
 		[
-			[0.02, -1.01],
-			[0.98, 0.99],
-			[0.9998, 1.001]
+			[0, -1],
+			[1.01, 1],
+			[1, 1]
 		],
 		[
-			[0.0001],
-			[1.001],
-			[-2.001]
+			[0],
+			[1],
+			[-2]
 		]
 	]
 
@@ -140,4 +140,4 @@ def test_xor_non_integral_11(dut):
 	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
-	should_equal('0', dut.out_data.value.binstr)
+	should_equal(0.0078125, dut.out_data.value.signed_integer / math.pow(2,8))
