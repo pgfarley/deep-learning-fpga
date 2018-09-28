@@ -51,21 +51,10 @@ always @( posedge clk) begin
 	if (weights_en) begin
 		if (weights_layer_address == 0) begin
 			w1[weights_n_address][weights_m_address] <= weights_data;
+		end else if (weights_layer_address == 1) begin
+			w2[weights_n_address][weights_m_address] <= weights_data;
 		end
 	end
-end
-
-always @( posedge clk) begin
-	w1[0][0] <= 0;
-	w1[0][1] <= -1;
-	w1[1][0] <= 1;
-	w1[1][1] <= 1;
-	w1[2][0] <= 1;
-	w1[2][1] <= 1;
-
-	w2[0][0] <= 0;
-	w2[1][0] <= 1;
-	w2[2][0] <= -2;
 
 
 	for(i = 0; i < INPUT_VECTOR_COUNT; i=i+1) begin
@@ -92,7 +81,12 @@ always @( posedge clk) begin
 	out_data <= out_data;
 	
 
-	$display("w1[1]..............%d",w1[0][1]);
+	$display("w1[0][0]..............%d",w1[0][0]);
+	$display("w1[0][1]..............%d",w1[0][1]);
+	$display("w1[1][0]..............%d",w1[1][0]);
+	$display("w1[1][1]..............%d",w1[1][1]);
+	$display("w1[2][0]..............%d",w1[2][0]);
+	$display("w1[2][1]..............%d",w1[2][1]);
 end
 
 endmodule
