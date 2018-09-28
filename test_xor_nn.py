@@ -14,50 +14,50 @@ def test_00(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
 
-	dut.input_data = 0b00
+	dut.in_data = 0b00
 
 	for _ in range(0,10):
 		yield RisingEdge(dut.clk)
 	yield ReadOnly()
 
-	should_equal('0', dut.prediction_data.value.binstr)
+	should_equal('0', dut.out_data.value.binstr)
 
 @cocotb.test(timeout=None)
 def test_01(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
 
-	dut.input_data = 0b01
+	dut.in_data = 0b01
 
 	for _ in range(0,10):
 		yield RisingEdge(dut.clk)
 	yield ReadOnly()
 
-	should_equal('1', dut.prediction_data.value.binstr)
+	should_equal('1', dut.out_data.value.binstr)
 
 @cocotb.test(timeout=None)
 def test_10(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
 
-	dut.input_data = 0b10
+	dut.in_data = 0b10
 
 	for _ in range(0,10):
 		yield RisingEdge(dut.clk)
 	yield ReadOnly()
 
-	should_equal('1', dut.prediction_data.value.binstr)
+	should_equal('1', dut.out_data.value.binstr)
 
 @cocotb.test(timeout=None)
 def test_11(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
 
-	dut.input_data = 0b11
+	dut.in_data = 0b11
 
 	for _ in range(0,10):
 		yield RisingEdge(dut.clk)
 	yield ReadOnly()
 
-	should_equal('0', dut.prediction_data.value.binstr)
+	should_equal('0', dut.out_data.value.binstr)
 

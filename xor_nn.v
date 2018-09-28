@@ -12,9 +12,14 @@ module xor_nn #(parameter
 ) (
 	input clk,
 	input reset_n,
-	input[CLOG2_INPUT_VECTOR_SIZE-1:0] input_data,
+	input weights_en,
+	input [BITS_PER_WORD-1:0] weights_data,
 
-	output reg[CLOG2_OUTPUT_VECTOR_SIZE-1:0] prediction_data
+	input in_en,
+	input[CLOG2_INPUT_VECTOR_SIZE-1:0] in_data,
+
+	output reg out_en,
+	output reg[CLOG2_OUTPUT_VECTOR_SIZE-1:0] out_data
 );
 
 wire[0:0] x [CLOG2_INPUT_VECTOR_COUNT-1:0][CLOG2_INPUT_VECTOR_SIZE:0];
@@ -30,8 +35,8 @@ function relu;
 endfunction
 	
 assign x[0][0] = 1;
-assign x[0][1] = input_data[0];
-assign x[0][2] = input_data[1];
+assign x[0][1] = in_data[0];
+assign x[0][2] = in_data[1];
 
 integer i, j, k;
 always @( posedge clk)
@@ -57,20 +62,19 @@ begin
 			end
  			h1[i][j+1] = relu(h1[i][j+1]);
 		end
-	h1[i] = {h1[i][j-1:0],1'b1};
 	end
 
 	
 	for(i = 0; i < CLOG2_OUTPUT_VECTOR_SIZE; i=i+1) begin
-		prediction_data[i] = 0;
+		out_data[i] = 0;
 		for(j = 0; j < CLOG2_HIDDEN_LAYER_SIZE + 1; j=j+1) begin
 			for(k = 0; k < CLOG2_INPUT_VECTOR_COUNT; k=k+1) begin
-				prediction_data[i] = prediction_data[i] + (h1[k][j] * w2[j][i]);
+				out_data[i] = out_data[i] + (h1[k][j] * w2[j][i]);
 			end
 		end
 	end
 
-	prediction_data <= prediction_data;
+	out_data <= out_data;
 	
 
 end
