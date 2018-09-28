@@ -1,4 +1,4 @@
-//TODO non-integer weights
+//TODO weights overflow check
 //TODO dynamic number of hidden layers?
 module feed_forward_neural_network_top #(parameter
 	BITS_PER_WORD = 8,
@@ -29,6 +29,10 @@ wire[0:0] x [INPUT_VECTOR_COUNT-1:0][INPUT_VECTOR_SIZE+BIAS_SIZE-1:0];
 reg signed [BITS_PER_WORD-1:0]  w1 [INPUT_VECTOR_SIZE+BIAS_SIZE-1:0][HIDDEN_LAYER_SIZE-1:0];
 reg [BITS_PER_WORD-1:0] h1 [INPUT_VECTOR_COUNT-1:0][HIDDEN_LAYER_SIZE+BIAS_SIZE-1:0];
 reg signed [BITS_PER_WORD-1:0] w2 [HIDDEN_LAYER_SIZE+BIAS_SIZE-1:0][OUTPUT_VECTOR_SIZE-1:0];
+
+localparam MULTIPLY_RESULT_HI_BIT = BITS_PER_WORD + BITS_PER_WORD/2 - 1;
+localparam MULTIPLY_RESULT_LOW_BIT = BITS_PER_WORD/2;
+reg [(BITS_PER_WORD*2)-1:0] multiply_result;
 
 function relu;
 	input signed [BITS_PER_WORD-1:0] value;
@@ -62,7 +66,9 @@ always @( posedge clk) begin
 				for(j = 0; j < HIDDEN_LAYER_SIZE; j=j+1) begin
 					h1[i][j+1] = 0;
 					for(k = 0; k < INPUT_VECTOR_SIZE + BIAS_SIZE; k=k+1) begin
-						h1[i][j+1] = h1[i][j+1] + (x[i][k] * w1[k][j]);
+						multiply_result = (x[i][k] * w1[k][j]);
+						h1[i][j+1] = h1[i][j+1] + multiply_result[MULTIPLY_RESULT_HI_BIT:MULTIPLY_RESULT_LOW_BIT];
+;
 					end
 		 			h1[i][j+1] = relu(h1[i][j+1]);
 				end
@@ -73,7 +79,9 @@ always @( posedge clk) begin
 				out_data[i] = 0;
 				for(j = 0; j < HIDDEN_LAYER_SIZE + BIAS_SIZE; j=j+1) begin
 					for(k = 0; k < INPUT_VECTOR_COUNT; k=k+1) begin
-						out_data[i] = out_data[i] + (h1[k][j] * w2[j][i]);
+						multiply_result = (h1[k][j] * w2[j][i]);
+						out_data[i] = out_data[i] + multiply_result[MULTIPLY_RESULT_HI_BIT:MULTIPLY_RESULT_LOW_BIT];
+
 					end
 				end
 			end

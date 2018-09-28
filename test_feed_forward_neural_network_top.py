@@ -1,3 +1,4 @@
+import math
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, ReadOnly
@@ -42,7 +43,7 @@ def load_weights(dut, weights):
 			dut.weights_n_address = n_idx
 			for m_idx, m in enumerate(n):
 				dut.weights_m_address = m_idx
-				dut.weights_data = m
+				dut.weights_data = int(m * math.pow(2,4))
 				yield RisingEdge(dut.clk)
 	dut.weights_en = 0
 	yield RisingEdge(dut.clk)
@@ -113,4 +114,30 @@ def test_xor_11(dut):
 
 @cocotb.test()
 def test_xor_non_integral_11(dut):
-	pass
+
+	cocotb.fork(Clock(dut.clk, 5000).start())
+	
+	yield reset(dut)
+
+	weights = [ 
+		[
+			[0.02, -1.01],
+			[0.98, 0.99],
+			[0.9998, 1.001]
+		],
+		[
+			[0.0001],
+			[1.001],
+			[-2.001]
+		]
+	]
+
+	yield load_weights(dut, weights)	
+
+	dut.in_data = 0b11
+	dut.in_en = 1
+
+	yield RisingEdge(dut.out_en)
+	yield ReadOnly()
+
+	should_equal('0', dut.out_data.value.binstr)
