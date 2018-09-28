@@ -2,7 +2,7 @@
 //TODO  reset_n support
 //TODO non-integer weights
 //TODO dynamic number of hidden layers?
-module xor_nn #(parameter
+module feed_forward_neural_network_top #(parameter
 	BITS_PER_WORD = 8,
 	INPUT_VECTOR_SIZE = 2,
 	INPUT_VECTOR_COUNT = 1,
