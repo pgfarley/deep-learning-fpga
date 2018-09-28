@@ -14,8 +14,21 @@ def test_00(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
 
-	dut.in_data = 0b00
+	
+	yield RisingEdge(dut.clk)
 
+	dut.weights_en = 1
+	dut.weights_layer_address = 0
+	dut.weights_n_address = 0
+	dut.weights_m_address = 1
+	dut.weights_data = -1
+
+	yield RisingEdge(dut.clk)
+	yield ReadOnly()
+
+	yield RisingEdge(dut.clk)
+	dut.in_data = 0b00
+	
 	for _ in range(0,10):
 		yield RisingEdge(dut.clk)
 	yield ReadOnly()

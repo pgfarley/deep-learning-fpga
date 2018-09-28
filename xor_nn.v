@@ -10,14 +10,16 @@ module xor_nn #(parameter
 	HIDDEN_LAYER_SIZE = 2,
 	OUTPUT_VECTOR_SIZE = 1,
 	BIAS_SIZE = 1,
-	CLOG2_MAX_WEIGHTS_SIZE = 2
+	CLOG2_MAX_WEIGHTS_N = 2,
+	CLOG2_MAX_WEIGHTS_M = 2
 ) (
 	input clk,
 	input reset_n,
 	input weights_en,
 	input [0:0] weights_layer_address,
-	input [CLOG2_MAX_WEIGHTS_SIZE-1:0] weights_neuron_address,
-	input [BITS_PER_WORD-1:0] weights_data,
+	input [CLOG2_MAX_WEIGHTS_N-1:0] weights_n_address,
+	input [CLOG2_MAX_WEIGHTS_M-1:0] weights_m_address,
+	input signed [BITS_PER_WORD-1:0] weights_data,
 
 	input in_en,
 	input[INPUT_VECTOR_SIZE-1:0] in_data,
@@ -43,8 +45,17 @@ assign x[0][1] = in_data[0];
 assign x[0][2] = in_data[1];
 
 integer i, j, k;
-always @( posedge clk)
-begin
+
+always @( posedge clk) begin
+
+	if (weights_en) begin
+		if (weights_layer_address == 0) begin
+			w1[weights_n_address][weights_m_address] <= weights_data;
+		end
+	end
+end
+
+always @( posedge clk) begin
 	w1[0][0] <= 0;
 	w1[0][1] <= -1;
 	w1[1][0] <= 1;
@@ -81,6 +92,7 @@ begin
 	out_data <= out_data;
 	
 
+	$display("w1[1]..............%d",w1[0][1]);
 end
 
 endmodule
