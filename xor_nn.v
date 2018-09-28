@@ -56,7 +56,6 @@ always @( posedge clk) begin
 		end
 	end
 
-
 	for(i = 0; i < INPUT_VECTOR_COUNT; i=i+1) begin
 	h1[i][0] = 1;
 		for(j = 0; j < HIDDEN_LAYER_SIZE; j=j+1) begin
@@ -81,12 +80,6 @@ always @( posedge clk) begin
 	out_data <= out_data;
 	
 
-	$display("w1[0][0]..............%d",w1[0][0]);
-	$display("w1[0][1]..............%d",w1[0][1]);
-	$display("w1[1][0]..............%d",w1[1][0]);
-	$display("w1[1][1]..............%d",w1[1][1]);
-	$display("w1[2][0]..............%d",w1[2][0]);
-	$display("w1[2][1]..............%d",w1[2][1]);
 end
 
 endmodule
