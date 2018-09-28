@@ -1,5 +1,4 @@
 //TODO  bus protocol
-//TODO  Allow weights to be passed in
 //TODO  reset_n support
 //TODO non-integer weights
 //TODO dynamic number of hidden layers?
