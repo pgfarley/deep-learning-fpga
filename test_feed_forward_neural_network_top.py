@@ -47,7 +47,7 @@ def load_weights(dut, weights):
 	dut.weights_en = 0
 	yield RisingEdge(dut.clk)
 
-@cocotb.test(timeout=None)
+@cocotb.test()
 def test_xor_00(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
@@ -58,13 +58,12 @@ def test_xor_00(dut):
 	dut.in_data = 0b00
 	dut.in_en = 1
 	
-	for _ in range(0,10):
-		yield RisingEdge(dut.clk)
+	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
 	should_equal('0', dut.out_data.value.binstr)
 
-@cocotb.test(timeout=None)
+@cocotb.test()
 def test_xor_01(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
@@ -80,7 +79,7 @@ def test_xor_01(dut):
 
 	should_equal('1', dut.out_data.value.binstr)
 
-@cocotb.test(timeout=None)
+@cocotb.test()
 def test_xor_10(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
@@ -91,13 +90,12 @@ def test_xor_10(dut):
 	dut.in_data = 0b10
 	dut.in_en = 1
 
-	for _ in range(0,10):
-		yield RisingEdge(dut.clk)
+	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
 	should_equal('1', dut.out_data.value.binstr)
 
-@cocotb.test(timeout=None)
+@cocotb.test()
 def test_xor_11(dut):
 
 	cocotb.fork(Clock(dut.clk, 5000).start())
@@ -108,9 +106,11 @@ def test_xor_11(dut):
 	dut.in_data = 0b11
 	dut.in_en = 1
 
-	for _ in range(0,10):
-		yield RisingEdge(dut.clk)
+	yield RisingEdge(dut.out_en)
 	yield ReadOnly()
 
 	should_equal('0', dut.out_data.value.binstr)
 
+@cocotb.test()
+def test_xor_non_integral_11(dut):
+	pass
