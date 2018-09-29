@@ -109,3 +109,6 @@ sim_build
 #vim
 *.swp
 results.xml
+
+#project
+mnist
