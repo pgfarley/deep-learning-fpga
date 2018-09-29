@@ -67,7 +67,7 @@ always @( posedge clk) begin
 				for(j = 0; j < HIDDEN_LAYER_SIZE; j=j+1) begin
 					h1[i][j+1] = 0;
 					for(k = 0; k < INPUT_VECTOR_SIZE + BIAS_SIZE; k=k+1) begin
-						multiply_result = (x[i][k] * w1[k][j]);
+						multiply_result =  {{BITS_PER_WORD{x[i][k][BITS_PER_WORD-1]}}, x[i][k]} * {{BITS_PER_WORD{w1[k][j][BITS_PER_WORD-1]}}, w1[k][j]};
 						h1[i][j+1] = h1[i][j+1] + multiply_result[MULTIPLY_RESULT_HI_BIT:MULTIPLY_RESULT_LOW_BIT];
 
 					end
@@ -80,7 +80,7 @@ always @( posedge clk) begin
 				out_data[i] = 0;
 				for(j = 0; j < HIDDEN_LAYER_SIZE + BIAS_SIZE; j=j+1) begin
 					for(k = 0; k < INPUT_VECTOR_COUNT; k=k+1) begin
-						multiply_result = (h1[k][j] * w2[j][i]);
+						multiply_result =  {{BITS_PER_WORD{h1[k][j][BITS_PER_WORD-1]}}, h1[k][j]} * {{BITS_PER_WORD{w2[j][i][BITS_PER_WORD-1]}}, w2[j][i]};
 						out_data = out_data + (multiply_result[MULTIPLY_RESULT_HI_BIT:MULTIPLY_RESULT_LOW_BIT] << (i * BITS_PER_WORD));
 					end
 				end
