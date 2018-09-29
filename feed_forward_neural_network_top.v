@@ -1,8 +1,8 @@
-//TODO test against python learned weights
+//TODO Collapse to one for loop (just need to handele no relu, no bias on the output)
 //TODO weights overflow check
 //TODO dynamic number of hidden layers?
 module feed_forward_neural_network_top #(parameter
-	BITS_PER_WORD = 16,
+	BITS_PER_WORD = 32,
 	INPUT_VECTOR_SIZE = 2,
 	INPUT_VECTOR_COUNT = 1,
 	HIDDEN_LAYER_SIZE = 2,
@@ -69,13 +69,11 @@ always @( posedge clk) begin
 					for(k = 0; k < INPUT_VECTOR_SIZE + BIAS_SIZE; k=k+1) begin
 						multiply_result =  {{BITS_PER_WORD{x[i][k][BITS_PER_WORD-1]}}, x[i][k]} * {{BITS_PER_WORD{w1[k][j][BITS_PER_WORD-1]}}, w1[k][j]};
 						h1[i][j+1] = h1[i][j+1] + multiply_result[MULTIPLY_RESULT_HI_BIT:MULTIPLY_RESULT_LOW_BIT];
-
 					end
 		 			h1[i][j+1] = relu(h1[i][j+1]);
 				end
 			end
 		
-			
 			for(i = 0; i < OUTPUT_VECTOR_SIZE; i=i+1) begin
 				out_data[i] = 0;
 				for(j = 0; j < HIDDEN_LAYER_SIZE + BIAS_SIZE; j=j+1) begin
