@@ -3,8 +3,8 @@
 //TODO dynamic number of hidden layers?
 module feed_forward_neural_network_top #(parameter
 	BITS_PER_WORD = 32,
-	INPUT_VECTOR_SIZE = 2,
 	INPUT_VECTOR_COUNT = 1,
+	INPUT_VECTOR_SIZE=2,
 	HIDDEN_LAYER_SIZE = 2,
 	OUTPUT_VECTOR_SIZE = 1,
 	BIAS_SIZE = 1,
@@ -25,6 +25,7 @@ module feed_forward_neural_network_top #(parameter
 	output reg out_en,
 	output reg[(BITS_PER_WORD * OUTPUT_VECTOR_SIZE)-1:0] out_data
 );
+
 
 wire[BITS_PER_WORD-1:0] x [INPUT_VECTOR_COUNT-1:0][INPUT_VECTOR_SIZE+BIAS_SIZE-1:0];
 reg signed [BITS_PER_WORD-1:0]  w1 [INPUT_VECTOR_SIZE+BIAS_SIZE-1:0][HIDDEN_LAYER_SIZE-1:0];
@@ -92,6 +93,25 @@ always @( posedge clk) begin
 	end
 end
 
+`ifdef COCOTB_SIM
+initial begin
+ 	$dumpvars;   
+  	#1;
+end
+genvar dump_w1_i, dump_w1_j, dump_w2_i, dump_w2_j;
+for(dump_w1_i = 0; dump_w1_i < INPUT_VECTOR_SIZE+BIAS_SIZE; dump_w1_i=dump_w1_i+1) begin
+	for(dump_w1_j = 0; dump_w1_j < HIDDEN_LAYER_SIZE; dump_w1_j=dump_w1_j+1) begin
+		initial $dumpvars (0, w1[dump_w1_i][dump_w1_j]);
+	end
+end
+
+for(dump_w2_i = 0; dump_w2_i < HIDDEN_LAYER_SIZE+BIAS_SIZE; dump_w2_i=dump_w2_i+1) begin
+	for(dump_w2_j = 0; dump_w2_j <OUTPUT_VECTOR_SIZE; dump_w2_j=dump_w2_j+1) begin
+		initial $dumpvars (0, w2[dump_w2_i][dump_w2_j]);
+	end
+end
+
+`endif
 endmodule
 
 

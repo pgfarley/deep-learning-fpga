@@ -105,6 +105,7 @@ venv.bak/
 
 # cocotb
 sim_build
+*.vcd
 
 #vim
 *.swp

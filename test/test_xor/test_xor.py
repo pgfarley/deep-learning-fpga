@@ -4,6 +4,8 @@ from cocotb.triggers import RisingEdge, ReadOnly
 from cocotb.binary import BinaryValue
 from cocotb.result import TestFailure
 
+import os
+import struct
 import math
 import numpy as np
 import sklearn as sk
@@ -204,4 +206,4 @@ def validate_against_sklearn(dut):
 				nn.predict([inputs[1]])[0], 
 				dut.out_data.value.signed_integer / math.pow(2,16), 
 				epsilon = 0.01)
-	
+

@@ -21,7 +21,7 @@ def show_image(index=0, image_set='train'):
 
 #sklearn.datasets.load_digits
 def train_nn():
-	nn = sk.neural_network.MLPClassifier(activation='relu', hidden_layer_sizes=(10,))
+	nn = sk.neural_network.MLPClassifier(activation='relu', hidden_layer_sizes=(1,))
 	
 	with open("mnist/train-images.idx3-ubyte", "rb") as image_file:
 		with open("mnist/train-labels.idx1-ubyte", "rb") as label_file:
