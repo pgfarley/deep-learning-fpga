@@ -7,9 +7,9 @@ Experimenting with training and inference on FPGAs. Very WIP. Please don't use, 
 
 [binstr](https://pypi.org/project/binstr/) - pip install
 
-[Icarus Verilog](http://iverilog.icarus.com/)
+[Icarus Verilog](http://iverilog.icarus.com/) - apt-get install iverilog 
 
-[Cocotb](https://github.com/potentialventures/cocotb)
+[Cocotb](https://github.com/potentialventures/cocotb) - Dlone repo. Set COCOTB to repo dir.
 
 #### Run
 ```
