@@ -6,7 +6,8 @@ VERILOG_SOURCES = $(SRC_DIR)/feed_forward_neural_network_top.v
 TOPLEVEL=feed_forward_neural_network_top
 MODULE=test_mnist
 
-COMPILE_ARGS+=-Pfeed_forward_neural_network_top.INPUT_VECTOR_SIZE=784
+#28w * 28h * 8 bits
+COMPILE_ARGS+=-Pfeed_forward_neural_network_top.INPUT_VECTOR_SIZE=6272
 COMPILE_ARGS+=-Pfeed_forward_neural_network_top.CLOG2_MAX_WEIGHTS_N=10
 
 include $(COCOTB)/makefiles/Makefile.inc

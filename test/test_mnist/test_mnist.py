@@ -11,6 +11,7 @@ import numpy as np
 import sklearn as sk
 import sklearn.neural_network
 
+from binstr import bytes_to_b
 
 def should_equal(expected, actual, epsilon=0):
     if (expected - actual > epsilon):
@@ -51,18 +52,57 @@ def mnist_predict_1(dut):
     cocotb.fork(Clock(dut.clk, 2).start())
 
     nn = sk.neural_network.MLPRegressor(
+#    nn = sk.neural_network.MLPClassifier(
         activation='relu',
         hidden_layer_sizes=(2,)
     )
 
-    with open("mnist/train-images.idx3-ubyte", "rb") as image_file:
-        with open("mnist/train-labels.idx1-ubyte", "rb") as label_file:
+#    with open("mnist/train-images.idx3-ubyte", "rb") as image_file:
+#        with open("mnist/train-labels.idx1-ubyte", "rb") as label_file:
+#
+#            _, image_count, height, width = struct.unpack(
+#                '>iiii',
+#                image_file.read(16)
+#            )
+#
+#            _, label_count = struct.unpack('>ii', label_file.read(8))
+#
+#            image_data = np.array(
+#                struct.unpack(
+#                    f"{width*height*image_count}B",
+#                    image_file.read(width * height*image_count)
+#                )
+#            ).reshape(image_count, width*height)
+#
+#            label_data = np.array(
+#                struct.unpack(
+#                    f"{label_count}B",
+#                    label_file.read(image_count)
+#                )
+#            ).reshape(-1,)
+#
+#            nn.fit(image_data, label_data)
+#
+#    weights = [
+#        np.insert(nn.coefs_[0], 0, nn.intercepts_[0], axis=0),
+#        np.insert(nn.coefs_[1], 0, nn.intercepts_[1], axis=0)
+#    ]
+#    print(weights)
+#    print(np.array(weights).shape)
+#    print(np.array(weights[0]).shape)
+#    print(np.array(weights[1]).shape)
+#
+    yield reset(dut)
+
+#    yield load_weights(dut, weights)
+
+    with open("mnist/t10k-images.idx3-ubyte", "rb") as image_file:
+        with open("mnist/t10k-labels.idx1-ubyte", "rb") as label_file:
 
             _, image_count, height, width = struct.unpack(
                 '>iiii',
                 image_file.read(16)
             )
-
             _, label_count = struct.unpack('>ii', label_file.read(8))
 
             image_data = np.array(
@@ -79,16 +119,24 @@ def mnist_predict_1(dut):
                 )
             ).reshape(-1,)
 
-            nn.fit(image_data, label_data)
+#            prediction = nn.predict(image_data[1].reshape(1,image_data.shape[1]))
+#
+#            print(label_data[1])
+#            print(prediction)
+    with open("mnist/t10k-images.idx3-ubyte", "rb") as image_file:
+        _ = image_file.read(16)
+        data = image_file.read(784)
+        input_data = BinaryValue()
+        input_data.binstr = bytes_to_b(data)
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print(input_data.buff)
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        dut.in_data = input_data
+        dut.in_en = 1
 
-    weights = [
-        np.insert(nn.coefs_[0], 0, nn.intercepts_[0], axis=0),
-        np.insert(nn.coefs_[1], 0, nn.intercepts_[1], axis=0)
-    ]
-    print(weights)
-    print(np.array(weights).shape)
-    print(np.array(weights[0]).shape)
-    print(np.array(weights[1]).shape)
+#    yield RisingEdge(dut.out_en)
+#    yield ReadOnly()
+
 
     yield RisingEdge(dut.clk)
     yield RisingEdge(dut.clk)
@@ -96,11 +144,4 @@ def mnist_predict_1(dut):
     yield RisingEdge(dut.clk)
     yield RisingEdge(dut.clk)
     yield RisingEdge(dut.clk)
-    yield RisingEdge(dut.clk)
-    yield RisingEdge(dut.clk)
-
-    yield reset(dut)
-
-    yield load_weights(dut, weights)
-
     yield RisingEdge(dut.clk)

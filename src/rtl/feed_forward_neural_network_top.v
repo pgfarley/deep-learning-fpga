@@ -98,18 +98,30 @@ initial begin
  	$dumpvars;   
   	#1;
 end
-genvar dump_w1_i, dump_w1_j, dump_w2_i, dump_w2_j;
+genvar dump_x_i, dump_x_j, dump_w1_i, dump_w1_j, dump_w2_i, dump_w2_j;
+
+for(dump_x_i = 0; dump_x_i < INPUT_VECTOR_COUNT; dump_x_i=dump_x_i+1) begin
+	for(dump_x_j = 0; dump_x_j < INPUT_VECTOR_SIZE+BIAS_SIZE; dump_x_j=dump_x_j+1) begin
+		initial $dumpvars (0, x[dump_x_i][dump_x_j]);
+	end
+end
+
+/*
 for(dump_w1_i = 0; dump_w1_i < INPUT_VECTOR_SIZE+BIAS_SIZE; dump_w1_i=dump_w1_i+1) begin
 	for(dump_w1_j = 0; dump_w1_j < HIDDEN_LAYER_SIZE; dump_w1_j=dump_w1_j+1) begin
 		initial $dumpvars (0, w1[dump_w1_i][dump_w1_j]);
 	end
 end
+*/
 
+/*
 for(dump_w2_i = 0; dump_w2_i < HIDDEN_LAYER_SIZE+BIAS_SIZE; dump_w2_i=dump_w2_i+1) begin
 	for(dump_w2_j = 0; dump_w2_j <OUTPUT_VECTOR_SIZE; dump_w2_j=dump_w2_j+1) begin
 		initial $dumpvars (0, w2[dump_w2_i][dump_w2_j]);
 	end
 end
+*/
+
 
 `endif
 endmodule
