@@ -5,7 +5,7 @@ Experimenting with training and inference on FPGAs. Very WIP. Please don't use, 
 
 #### Requirements
 
-pip install binstr
+[binstr](https://pypi.org/project/binstr/) - pip install
 
 [Icarus Verilog](http://iverilog.icarus.com/)
 
