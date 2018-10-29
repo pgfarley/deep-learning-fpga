@@ -104,6 +104,8 @@ initial begin
      $dumpvars;   
       #1;
 end
+
+/*
 genvar dump_x_i, dump_x_j, dump_w1_i, dump_w1_j, dump_w2_i, dump_w2_j, dump_h1_i, dump_h1_j;
 
 for(dump_x_i = 0; dump_x_i < INPUT_VECTOR_COUNT; dump_x_i=dump_x_i+1) begin
@@ -134,7 +136,7 @@ for(dump_w2_i = 0; dump_w2_i < HIDDEN_LAYER_SIZE+BIAS_SIZE; dump_w2_i=dump_w2_i+
     end
 end
 
-
+*/
 
 `endif
 endmodule

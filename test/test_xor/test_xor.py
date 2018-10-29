@@ -13,7 +13,7 @@ import sklearn.neural_network
 
 
 def should_equal(expected, actual, epsilon=0):
-    if (abs(expected - actual > epsilon)):
+    if (abs(expected - actual) > epsilon):
         raise TestFailure(
             f'Expected {expected} found {actual}. Exceeds epsilon of {epsilon}'
         )

@@ -14,7 +14,7 @@ import sklearn.neural_network
 from binstr import bytes_to_b
 
 def should_equal(expected, actual, epsilon=0):
-    if (abs(expected - actual > epsilon)):
+    if (abs(expected - actual) > epsilon):
         raise TestFailure(
             f'Expected {expected} found {actual}. Exceeds epsilon of {epsilon}'
         )
@@ -54,7 +54,7 @@ def mnist_predict_1(dut):
     nn = sk.neural_network.MLPRegressor(
 #    nn = sk.neural_network.MLPClassifier(
         activation='relu',
-        hidden_layer_sizes=(2,)
+        hidden_layer_sizes=(10,)
     )
 
     with open("mnist/train-images.idx3-ubyte", "rb") as image_file:
