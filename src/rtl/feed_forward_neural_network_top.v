@@ -1,10 +1,8 @@
-//TODO Collapse to one for loop (just need to handele no relu, no bias on the output)
-//TODO weights overflow check
-//TODO dynamic number of hidden layers?
 module feed_forward_neural_network_top #(parameter
 	BITS_PER_WORD = 32,
 	INPUT_VECTOR_COUNT = 1,
 	INPUT_VECTOR_SIZE=2,
+    INPUT_WORD_SIZE=1,
 	HIDDEN_LAYER_SIZE = 2,
 	OUTPUT_VECTOR_SIZE = 1,
 	BIAS_SIZE = 1,
@@ -42,10 +40,11 @@ function automatic [BITS_PER_WORD-1:0] relu ;
 		relu = (value[BITS_PER_WORD-1] == 1) ? 0 : value;
 	end
 endfunction
-	
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//TODO Generate copy	
 assign x[0][0] = 1 << BITS_PER_WORD/2;
-assign x[0][1] = in_data[0]  << BITS_PER_WORD/2;
-assign x[0][2] = in_data[1]  << BITS_PER_WORD/2;
+assign x[0][1] = in_data[INPUT_WORD_SIZE * 0 + INPUT_WORD_SIZE - 1:INPUT_WORD_SIZE * 0]  << BITS_PER_WORD/2;
+assign x[0][2] = in_data[INPUT_WORD_SIZE * 1 + INPUT_WORD_SIZE - 1:INPUT_WORD_SIZE * 1]  << BITS_PER_WORD/2;
 
 integer i, j, k;
 

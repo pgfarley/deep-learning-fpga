@@ -7,6 +7,7 @@ TOPLEVEL=feed_forward_neural_network_top
 MODULE=test_xor
 
 COMPILE_ARGS=-Pfeed_forward_neural_network_top.INPUT_VECTOR_SIZE=2
+COMPILE_ARGS+=-Pfeed_forward_neural_network_top.INPUT_WORD_SIZE=1
 COMPILE_ARGS+=-Pfeed_forward_neural_network_top.CLOG2_MAX_WEIGHTS_N=2
 
 
