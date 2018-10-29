@@ -9,7 +9,7 @@ Experimenting with training and inference on FPGAs. Very WIP. Please don't use, 
 
 [Icarus Verilog](http://iverilog.icarus.com/) - apt-get install iverilog 
 
-[Cocotb](https://github.com/potentialventures/cocotb) - Dlone repo. Set COCOTB to repo dir.
+[Cocotb](https://github.com/potentialventures/cocotb) - set COCOTB env variable to clone of repo
 
 #### Run
 ```
