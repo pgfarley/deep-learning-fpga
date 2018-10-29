@@ -13,7 +13,7 @@ import sklearn.neural_network
 
 
 def should_equal(expected, actual, epsilon=0):
-    if (expected - actual > epsilon):
+    if (abs(expected - actual > epsilon)):
         raise TestFailure(
             f'Expected {expected} found {actual}. Exceeds epsilon of {epsilon}'
         )
@@ -223,6 +223,13 @@ def validate_against_sklearn(dut):
             dut.in_en = 1
 
             yield RisingEdge(dut.out_en)
+            yield RisingEdge(dut.clk)
+            yield RisingEdge(dut.clk)
+            yield RisingEdge(dut.clk)
+            yield RisingEdge(dut.clk)
+            yield RisingEdge(dut.clk)
+            yield RisingEdge(dut.clk)
+            yield RisingEdge(dut.clk)
             yield ReadOnly()
             should_equal(
                 nn.predict([inputs[1]])[0],
